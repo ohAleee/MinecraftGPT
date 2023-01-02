@@ -27,14 +27,13 @@ public class PlayerHandlers implements Listener {
         if (this.plugin.getCache().asMap().containsKey(player)) {
             e.setCancelled(true);
 
+            player.sendMessage(ChatColor.AQUA + "You: " + ChatColor.GRAY + e.getMessage());
             OpenAI.getResponse(plugin.getCache().getIfPresent(player), e.getMessage()).whenComplete((response, throwable) -> {
                 if (throwable != null) {
                     throwable.printStackTrace();
                     player.sendMessage(ChatColor.RED + "An error occurred while processing your message.");
                     return;
                 }
-
-                player.sendMessage(ChatColor.AQUA + "You: " + ChatColor.GRAY + e.getMessage());
                 player.sendMessage(ChatColor.AQUA + "AI: " + ChatColor.GREEN + response);
             });
         }

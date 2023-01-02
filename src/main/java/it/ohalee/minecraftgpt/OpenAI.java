@@ -8,7 +8,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class OpenAI {
 
-    private static final OpenAiService service = new OpenAiService("");
+    private static final OpenAiService service = new OpenAiService("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", 0);
 
     public static CompletableFuture<String> getResponse(StringBuilder cached, String message) {
         cached.append("\nHuman:").append(message).append("\nAI:");
