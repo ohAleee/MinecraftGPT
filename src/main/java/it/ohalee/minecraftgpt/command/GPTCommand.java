@@ -21,14 +21,19 @@ public class GPTCommand implements CommandExecutor {
             return true;
         }
 
+        if (!player.hasPermission("minecraftgpt.command")) {
+            player.sendMessage(plugin.getConfig().getString("command.no-permission").replace("&", "§"));
+            return true;
+        }
+
         if (plugin.getCache().asMap().containsKey(player)) {
             plugin.getCache().invalidate(player);
-            player.sendMessage(ChatColor.RED + "ChatGPT has disconnected.");
+            player.sendMessage(plugin.getConfig().getString("command.toggle.disabled").replace("&", "§"));
             return true;
         }
 
         plugin.getCache().put(player, new StringBuilder());
-        player.sendMessage(ChatColor.GREEN + "ChatGPT has connected. Say Hi!");
+        player.sendMessage(plugin.getConfig().getString("command.toggle.enabled").replace("&", "§"));
         return true;
     }
 

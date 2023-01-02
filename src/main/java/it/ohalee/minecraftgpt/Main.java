@@ -16,16 +16,19 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+
+        OpenAI.init(getConfig().getString("API_KEY"));
+
         cache = CacheBuilder.newBuilder()
                 .expireAfterWrite(30, TimeUnit.MINUTES)
                 .removalListener((RemovalListener<Player, StringBuilder>) notification -> {
                     if (notification.getCause() == RemovalCause.EXPIRED && notification.getKey() != null) {
-                        notification.getKey().sendMessage("ChatGPT has disconnected.");
+                        notification.getKey().sendMessage(getConfig().getString("command.toggle.disabled").replace("&", "§"));
                     }
                 }).build();
 
         getServer().getPluginManager().registerEvents(new PlayerHandlers(this), this);
-
         getCommand("chatgpt").setExecutor(new GPTCommand(this));
 
         getLogger().info("Plugin enabled!");

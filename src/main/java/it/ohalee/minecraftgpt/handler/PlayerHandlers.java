@@ -11,6 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class PlayerHandlers implements Listener {
 
@@ -27,14 +29,16 @@ public class PlayerHandlers implements Listener {
         if (this.plugin.getCache().asMap().containsKey(player)) {
             e.setCancelled(true);
 
-            player.sendMessage(ChatColor.AQUA + "You: " + ChatColor.GRAY + e.getMessage());
+            List<String> list = plugin.getConfig().getStringList("command.format");
+
+            player.sendMessage(list.get(0).replace("&", "§").replace("%message%", e.getMessage()));
             OpenAI.getResponse(plugin.getCache().getIfPresent(player), e.getMessage()).whenComplete((response, throwable) -> {
                 if (throwable != null) {
                     throwable.printStackTrace();
-                    player.sendMessage(ChatColor.RED + "An error occurred while processing your message.");
+                    player.sendMessage(plugin.getConfig().getString("command.error").replace("&", "§"));
                     return;
                 }
-                player.sendMessage(ChatColor.AQUA + "AI: " + ChatColor.GREEN + response);
+                player.sendMessage(list.get(1).replace("&", "§").replace("%message%", response));
             });
         }
     }
