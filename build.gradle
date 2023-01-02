@@ -1,0 +1,52 @@
+plugins {
+    id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+}
+
+group = 'it.ohalee.minecraftgpt'
+version = '1.0.0'
+
+sourceCompatibility = 1.17
+targetCompatibility = 1.17
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+project.ext.majorVersion = '1'
+project.ext.minorVersion = '0'
+project.ext.apiVersion = '0'
+project.ext.fullVersion = project.ext.majorVersion + '.' + project.ext.minorVersion + '.' + project.ext.apiVersion
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
+}
+
+dependencies {
+
+    compileOnly("io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT")
+
+    implementation 'com.theokanning.openai-gpt3-java:client:0.8.1'
+    api 'com.github.ben-manes.caffeine:caffeine:3.1.1'
+
+    compileOnly 'org.checkerframework:checker-qual:3.21.2'
+    compileOnly 'org.jetbrains:annotations:23.0.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+}
+
+shadowJar {
+    archiveFileName = "MinecraftGPT-${project.ext.fullVersion}.jar"
+
+    relocate 'com.github.benmanes.caffeine', 'it.ohalee.minecraftgpt.lib.caffeine'
+}
+
+artifacts {
+    archives shadowJar
+}

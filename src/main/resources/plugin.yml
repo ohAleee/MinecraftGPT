@@ -1,0 +1,10 @@
+name: MinecraftGPT
+main: it.ohalee.minecraftgpt.Main
+version: 1.0.0
+author: ohAlee
+description: A Minecraft plugin that uses ChatGPT
+api-version: 1.16
+commands:
+  chatgpt:
+    description: A Minecraft plugin that uses ChatGPT
+    aliases: [mcgpt, minecraftgpt]
