@@ -1,12 +1,15 @@
 command:
   no-permission: "&cYou do not have permission to use this command."
+  invalid-type: "&cInvalid type. Valid types: &6{types}"
   toggle:
     enabled: "&aChatGPT has connected. Say Hi!"
     disabled: "&cChatGPT has disconnected."
-  format:
-    - "&bYou: &7%message%"
-    - "&bAI: &a%message%"
   error: "&cAn error occurred while processing your message."
+
+use-default-chat: false
+format:
+  - "&b%player%: &7%message%"
+  - "&bAI: &a%message%"
 
 # https://beta.openai.com/account/api-keys
 API_KEY: ""
