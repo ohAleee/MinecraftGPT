@@ -11,6 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -20,27 +22,49 @@ public class PlayerHandlers implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        plugin.getCache().invalidate(e.getPlayer());
+        Main.CACHE.invalidate(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent e) {
         Player player = e.getPlayer();
-        if (this.plugin.getCache().asMap().containsKey(player)) {
+
+        boolean hasFull = Main.USER_TYPE.asMap().values().stream().anyMatch(type -> type == Type.FULL);
+        if (!Main.CACHE.asMap().containsKey(player) && !hasFull) {
+            return;
+        }
+
+        Collection<Player> recipients = switch (Main.USER_TYPE.asMap().getOrDefault(player, hasFull ? Type.FULL : Type.SINGLE) ) {
+            case SINGLE -> Collections.singletonList(player);
+            case FULL, BROADCAST -> e.getRecipients();
+        };
+
+        List<String> list = plugin.getConfig().getStringList("format");
+
+        if (!plugin.getConfig().getBoolean("use-default-chat", false)) {
             e.setCancelled(true);
 
-            List<String> list = plugin.getConfig().getStringList("command.format");
-
-            player.sendMessage(list.get(0).replace("&", "§").replace("%message%", e.getMessage()));
-            OpenAI.getResponse(plugin.getCache().getIfPresent(player), e.getMessage()).whenComplete((response, throwable) -> {
-                if (throwable != null) {
-                    throwable.printStackTrace();
-                    player.sendMessage(plugin.getConfig().getString("command.error").replace("&", "§"));
-                    return;
-                }
-                player.sendMessage(list.get(1).replace("&", "§").replace("%message%", response));
-            });
+            for (Player rec : recipients)
+                rec.sendMessage(list.get(0).replace("&", "§")
+                        .replace("%message%", e.getMessage())
+                        .replace("%player%", player.getName()));
         }
+
+        StringBuilder builder = Main.CACHE.getIfPresent(player);
+        if (builder == null) builder = new StringBuilder();
+
+        OpenAI.getResponse(builder, e.getMessage()).whenComplete((response, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                player.sendMessage(plugin.getConfig().getString("command.error").replace("&", "§"));
+                return;
+            }
+
+            for (Player rec : recipients)
+                rec.sendMessage(list.get(1).replace("&", "§")
+                        .replace("%message%", response)
+                        .replace("%player%", player.getName()));
+        });
     }
 
 }
