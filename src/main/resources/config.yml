@@ -9,7 +9,7 @@ command:
 use-default-chat: false
 format:
   - "&b%player%: &7%message%"
-  - "&bAI: &a%message%"
+  - "&bAI -> %player%: &a%message%"
 
 # https://beta.openai.com/account/api-keys
 API_KEY: ""
