@@ -22,14 +22,14 @@ public class ChatCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can use this command!");
-            return true;
-        }
-
-        if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+        if (args.length == 1 && sender.hasPermission("minecraftgpt.command.reload") && args[0].equalsIgnoreCase("reload")) {
             plugin.reloadConfig();
             sender.sendMessage(ChatColor.GREEN + "Config reloaded!");
+            return true;
+        }
+        
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ChatColor.RED + "Only players can use this command!");
             return true;
         }
 
@@ -44,7 +44,7 @@ public class ChatCommand implements TabExecutor {
             }
         }
 
-        if (!player.hasPermission("minecraftgpt.command." + type)) {
+        if (!player.hasPermission("minecraftgpt.command." + type.name().toLowerCase())) {
             player.sendMessage(plugin.getConfig().getString("command.no-permission").replace("&", "§"));
             return true;
         }
