@@ -2,8 +2,8 @@ package it.ohalee.minecraftgpt.handler;
 
 import it.ohalee.minecraftgpt.Main;
 import it.ohalee.minecraftgpt.OpenAI;
+import it.ohalee.minecraftgpt.Type;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
