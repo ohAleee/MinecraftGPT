@@ -59,7 +59,7 @@ public class PlayerHandlers implements Listener {
                 player.sendMessage(Messages.format(plugin.getConfig().getString("command.error")));
                 return;
             }
-            sendMessage(list.get(1), recipients);
+            sendMessage(format(list.get(1), response, player.getName()), recipients);
         });
     }
 
