@@ -6,6 +6,7 @@ command:
     disabled: "&cChatGPT has disconnected."
   error: "&cAn error occurred while processing your message."
 
+send-messages-to-console: true
 use-default-chat: false
 format:
   - "&b%player%: &7%message%"

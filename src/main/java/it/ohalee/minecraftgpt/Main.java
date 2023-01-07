@@ -3,6 +3,7 @@ package it.ohalee.minecraftgpt;
 import com.google.common.cache.*;
 import it.ohalee.minecraftgpt.command.ChatCommand;
 import it.ohalee.minecraftgpt.handler.PlayerHandlers;
+import it.ohalee.minecraftgpt.util.Messages;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,7 +29,7 @@ public class Main extends JavaPlugin {
                     }
                     USER_TYPE.invalidate(notification.getKey());
                     if (notification.getCause() == RemovalCause.EXPIRED) {
-                        notification.getKey().sendMessage(getConfig().getString("command.toggle.disabled").replace("&", "§"));
+                        notification.getKey().sendMessage(Messages.format(getConfig().getString("command.toggle.disabled")));
                     }
                 }).build();
         USER_TYPE = CacheBuilder.newBuilder().build();

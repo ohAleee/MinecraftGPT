@@ -3,6 +3,7 @@ package it.ohalee.minecraftgpt.command;
 import it.ohalee.minecraftgpt.Main;
 import it.ohalee.minecraftgpt.Type;
 import it.ohalee.minecraftgpt.conversation.TypeManager;
+import it.ohalee.minecraftgpt.util.Messages;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -37,15 +38,14 @@ public class ChatCommand implements TabExecutor {
         if (args.length >= 1) {
             type = Type.getType(args[0]);
             if (type == null) {
-                player.sendMessage(plugin.getConfig().getString("command.invalid-type")
-                        .replace("&", "§")
+                player.sendMessage(Messages.format(plugin.getConfig().getString("command.invalid-type"))
                         .replace("{types}", String.join(", ", Arrays.stream(Type.values()).map(Enum::name).toArray(String[]::new))));
                 return true;
             }
         }
 
         if (!player.hasPermission("minecraftgpt.command." + type.name().toLowerCase())) {
-            player.sendMessage(plugin.getConfig().getString("command.no-permission").replace("&", "§"));
+            player.sendMessage(Messages.format(plugin.getConfig().getString("command.no-permission")));
             return true;
         }
 

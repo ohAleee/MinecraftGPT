@@ -3,6 +3,7 @@ package it.ohalee.minecraftgpt.handler;
 import it.ohalee.minecraftgpt.Main;
 import it.ohalee.minecraftgpt.OpenAI;
 import it.ohalee.minecraftgpt.Type;
+import it.ohalee.minecraftgpt.util.Messages;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,6 +11,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -44,10 +47,7 @@ public class PlayerHandlers implements Listener {
         if (!plugin.getConfig().getBoolean("use-default-chat", false)) {
             e.setCancelled(true);
 
-            for (Player rec : recipients)
-                rec.sendMessage(list.get(0).replace("&", "§")
-                        .replace("%message%", e.getMessage())
-                        .replace("%player%", player.getName()));
+            sendMessage(format(list.get(0), e.getMessage(), player.getName()), recipients);
         }
 
         StringBuilder builder = Main.CACHE.getIfPresent(player);
@@ -56,15 +56,22 @@ public class PlayerHandlers implements Listener {
         OpenAI.getResponse(builder, e.getMessage()).whenComplete((response, throwable) -> {
             if (throwable != null) {
                 throwable.printStackTrace();
-                player.sendMessage(plugin.getConfig().getString("command.error").replace("&", "§"));
+                player.sendMessage(Messages.format(plugin.getConfig().getString("command.error")));
                 return;
             }
-
-            for (Player rec : recipients)
-                rec.sendMessage(list.get(1).replace("&", "§")
-                        .replace("%message%", response)
-                        .replace("%player%", player.getName()));
+            sendMessage(list.get(1), recipients);
         });
+    }
+
+    private String format(String str, String message, String player) {
+        return Messages.format(str).replace("%message%", message).replace("%player%", player);
+    }
+
+    private void sendMessage(String message, Collection<Player> players) {
+        for (Player player : players)
+            player.sendMessage(message);
+        if (plugin.getConfig().getBoolean("send-messages-to-console", true))
+            plugin.getServer().getConsoleSender().sendMessage(message);
     }
 
 }
