@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'it.ohalee.minecraftgpt'
-version = '1.2.0'
+version = '1.2.2'
 
 sourceCompatibility = 1.17
 targetCompatibility = 1.17
@@ -15,7 +15,7 @@ tasks.withType(JavaCompile).configureEach {
 
 project.ext.majorVersion = '1'
 project.ext.minorVersion = '2'
-project.ext.apiVersion = '0'
+project.ext.apiVersion = '1'
 project.ext.fullVersion = project.ext.majorVersion + '.' + project.ext.minorVersion + '.' + project.ext.apiVersion
 
 repositories {

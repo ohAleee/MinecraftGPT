@@ -12,5 +12,13 @@ format:
   - "&b%player%: &7%message%"
   - "&bAI -> %player%: &a%message%"
 
+chatgpt:
+  model: "text-davinci-003"
+  temperature: 0.9
+  max-tokens: 150
+  top-p: 1.0
+  frequency-penalty: 0.0
+  presence-penalty: 0.6
+
 # https://beta.openai.com/account/api-keys
 API_KEY: ""

@@ -2,6 +2,7 @@ package it.ohalee.minecraftgpt;
 
 import com.theokanning.openai.OpenAiService;
 import com.theokanning.openai.completion.CompletionRequest;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
@@ -14,18 +15,18 @@ public class OpenAI {
         service = new OpenAiService(key, 0);
     }
 
-    public static CompletableFuture<String> getResponse(StringBuilder cached, String message) {
+    public static CompletableFuture<String> getResponse(ConfigurationSection section, StringBuilder cached, String message) {
         cached.append("\nHuman:").append(message).append("\nAI:");
 
         return CompletableFuture.supplyAsync(() -> {
             CompletionRequest request = CompletionRequest.builder()
                     .prompt(cached.toString())
-                    .model("text-davinci-003")
-                    .temperature(0.9)
-                    .maxTokens(150)
-                    .topP(1.0)
-                    .frequencyPenalty(0.0)
-                    .presencePenalty(0.6)
+                    .model(section.getString("model"))
+                    .temperature(section.getDouble("temperature"))
+                    .maxTokens(section.getInt("max-tokens"))
+                    .topP(section.getDouble("top-p"))
+                    .frequencyPenalty(section.getDouble("frequency-penalty"))
+                    .presencePenalty(section.getDouble("presence-penalty"))
                     .stop(Arrays.asList("Human:", "AI:"))
                     .build();
             return service.createCompletion(request).getChoices().get(0).getText();
