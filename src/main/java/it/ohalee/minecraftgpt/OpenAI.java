@@ -11,8 +11,8 @@ public class OpenAI {
 
     private static OpenAiService service;
 
-    public static void init(String key) {
-        service = new OpenAiService(key, 0);
+    public static CompletableFuture<Void> init(String key) {
+        return CompletableFuture.runAsync(() -> service = new OpenAiService(key, 5));
     }
 
     public static CompletableFuture<String> getResponse(ConfigurationSection section, StringBuilder cached, String message) {

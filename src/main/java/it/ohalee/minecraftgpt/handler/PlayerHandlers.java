@@ -37,7 +37,7 @@ public class PlayerHandlers implements Listener {
             return;
         }
 
-        Collection<Player> recipients = switch (Main.USER_TYPE.asMap().getOrDefault(player, hasFull ? Type.FULL : Type.SINGLE) ) {
+        Collection<Player> recipients = switch (Main.USER_TYPE.asMap().getOrDefault(player, hasFull ? Type.FULL : Type.SINGLE)) {
             case SINGLE -> Collections.singletonList(player);
             case FULL, BROADCAST -> e.getRecipients();
         };
