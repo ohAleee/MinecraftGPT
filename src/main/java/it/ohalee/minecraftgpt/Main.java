@@ -1,6 +1,9 @@
 package it.ohalee.minecraftgpt;
 
-import com.google.common.cache.*;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalCause;
+import com.google.common.cache.RemovalListener;
 import it.ohalee.minecraftgpt.command.ChatCommand;
 import it.ohalee.minecraftgpt.handler.PlayerHandlers;
 import it.ohalee.minecraftgpt.util.Messages;

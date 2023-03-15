@@ -3,6 +3,7 @@ package it.ohalee.minecraftgpt;
 import com.theokanning.openai.OpenAiService;
 import com.theokanning.openai.completion.CompletionRequest;
 import org.bukkit.configuration.ConfigurationSection;
+import retrofit2.HttpException;
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
@@ -18,18 +19,26 @@ public class OpenAI {
     public static CompletableFuture<String> getResponse(ConfigurationSection section, StringBuilder cached, String message) {
         cached.append("\nHuman:").append(message).append("\nAI:");
 
-        return CompletableFuture.supplyAsync(() -> {
-            CompletionRequest request = CompletionRequest.builder()
-                    .prompt(cached.toString())
-                    .model(section.getString("model"))
-                    .temperature(section.getDouble("temperature"))
-                    .maxTokens(section.getInt("max-tokens"))
-                    .topP(section.getDouble("top-p"))
-                    .frequencyPenalty(section.getDouble("frequency-penalty"))
-                    .presencePenalty(section.getDouble("presence-penalty"))
-                    .stop(Arrays.asList("Human:", "AI:"))
-                    .build();
-            return service.createCompletion(request).getChoices().get(0).getText();
+        return CompletableFuture.supplyAsync(() -> service.createCompletion(CompletionRequest.builder()
+                        .prompt(cached.toString())
+                        .model(section.getString("model"))
+                        .temperature(section.getDouble("temperature"))
+                        .maxTokens(section.getInt("max-tokens"))
+                        .topP(section.getDouble("top-p"))
+                        .frequencyPenalty(section.getDouble("frequency-penalty"))
+                        .presencePenalty(section.getDouble("presence-penalty"))
+                        .stop(Arrays.asList("Human:", "AI:"))
+                        .build())
+                .getChoices().get(0).getText()).exceptionally(throwable -> {
+            if (throwable.getCause() instanceof HttpException e) {
+                return switch (e.response().code()) {
+                    case 401 -> "Invalid API key! Please check your configuration.";
+                    case 429 -> "Too many requests! Please wait a few seconds and try again.";
+                    case 500 -> "OpenAI service is currently unavailable. Please try again later.";
+                    default -> "Unknown error! Please try again later. If this error persists, contact the plugin developer.";
+                };
+            }
+            throw new RuntimeException(throwable);
         });
     }
 

@@ -28,7 +28,7 @@ public class ChatCommand implements TabExecutor {
             sender.sendMessage(ChatColor.GREEN + "Config reloaded!");
             return true;
         }
-        
+
         if (!(sender instanceof Player player)) {
             sender.sendMessage(ChatColor.RED + "Only players can use this command!");
             return true;

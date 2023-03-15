@@ -11,8 +11,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -54,8 +52,7 @@ public class PlayerHandlers implements Listener {
         if (builder == null) builder = new StringBuilder();
 
         OpenAI.getResponse(plugin.getConfig().getConfigurationSection("chatgpt"), builder, e.getMessage()).whenComplete((response, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
+            if (response == null) {
                 player.sendMessage(Messages.format(plugin.getConfig().getString("command.error")));
                 return;
             }
