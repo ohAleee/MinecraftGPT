@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'it.ohalee.minecraftgpt'
-version = '1.2.3'
+version = '1.2.4'
 
 sourceCompatibility = 1.17
 targetCompatibility = 1.17
