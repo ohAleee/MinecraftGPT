@@ -31,12 +31,13 @@ public class OpenAI {
                         .build())
                 .getChoices().get(0).getText()).exceptionally(throwable -> {
             if (throwable.getCause() instanceof HttpException e) {
-                return switch (e.response().code()) {
+                String reason = switch (e.response().code()) {
                     case 401 -> "Invalid API key! Please check your configuration.";
                     case 429 -> "Too many requests! Please wait a few seconds and try again.";
                     case 500 -> "OpenAI service is currently unavailable. Please try again later.";
                     default -> "Unknown error! Please try again later. If this error persists, contact the plugin developer.";
                 };
+                throw new RuntimeException(reason, throwable);
             }
             throw new RuntimeException(throwable);
         });

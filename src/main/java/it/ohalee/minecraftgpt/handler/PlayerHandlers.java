@@ -52,7 +52,7 @@ public class PlayerHandlers implements Listener {
         if (builder == null) builder = new StringBuilder();
 
         OpenAI.getResponse(plugin.getConfig().getConfigurationSection("chatgpt"), builder, e.getMessage()).whenComplete((response, throwable) -> {
-            if (response == null) {
+            if (throwable != null) {
                 player.sendMessage(Messages.format(plugin.getConfig().getString("command.error")));
                 return;
             }
