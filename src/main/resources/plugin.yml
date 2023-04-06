@@ -8,3 +8,5 @@ commands:
   chatgpt:
     description: A Minecraft plugin that uses ChatGPT
     aliases: [mcgpt, minecraftgpt]
+libraries:
+  - 'com.theokanning.openai-gpt3-java:client:0.8.1'
