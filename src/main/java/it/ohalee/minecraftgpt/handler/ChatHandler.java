@@ -7,26 +7,19 @@ import it.ohalee.minecraftgpt.util.Messages;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class PlayerHandlers implements Listener {
+public class ChatHandler implements Listener {
 
     private final Main plugin;
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        Main.CACHE.invalidate(e.getPlayer());
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent e) {
         Player player = e.getPlayer();
 
@@ -53,6 +46,7 @@ public class PlayerHandlers implements Listener {
 
         OpenAI.getResponse(plugin.getConfig().getConfigurationSection("chatgpt"), builder, e.getMessage()).whenComplete((response, throwable) -> {
             if (throwable != null) {
+                throwable.printStackTrace();
                 player.sendMessage(Messages.format(plugin.getConfig().getString("command.error")));
                 return;
             }
@@ -70,5 +64,4 @@ public class PlayerHandlers implements Listener {
         if (plugin.getConfig().getBoolean("send-messages-to-console", true))
             plugin.getServer().getConsoleSender().sendMessage(message);
     }
-
 }
