@@ -20,5 +20,10 @@ chatgpt:
   frequency-penalty: 0.0
   presence-penalty: 0.6
 
+# Change this to change the priority of the chat listener (useful if you have other plugins that modify chat)
+# Don't change this unless you know what you're doing
+# Listeners are called in following order: LOWEST -> LOW -> NORMAL -> HIGH -> HIGHEST -> MONITOR
+chat-priority: HIGH
+
 # https://beta.openai.com/account/api-keys
 API_KEY: ""
