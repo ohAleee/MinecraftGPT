@@ -13,6 +13,7 @@ format:
   - "&bAI -> %player%: &a%message%"
 
 chatgpt:
+  # https://platform.openai.com/docs/models/
   model: "gpt-3.5-turbo"
   temperature: 0.9
   max-tokens: 150
