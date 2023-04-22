@@ -13,7 +13,7 @@ format:
   - "&bAI -> %player%: &a%message%"
 
 chatgpt:
-  model: "text-davinci-003"
+  model: "gpt-3.5-turbo"
   temperature: 0.9
   max-tokens: 150
   top-p: 1.0
