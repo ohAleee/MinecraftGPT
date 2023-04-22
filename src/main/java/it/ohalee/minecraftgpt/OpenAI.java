@@ -1,10 +1,11 @@
 package it.ohalee.minecraftgpt;
 
-import com.theokanning.openai.OpenAiService;
 import com.theokanning.openai.completion.CompletionRequest;
+import com.theokanning.openai.service.OpenAiService;
 import org.bukkit.configuration.ConfigurationSection;
 import retrofit2.HttpException;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
@@ -13,7 +14,7 @@ public class OpenAI {
     private static OpenAiService service;
 
     public static CompletableFuture<Void> init(String key) {
-        return CompletableFuture.runAsync(() -> service = new OpenAiService(key, 5));
+        return CompletableFuture.runAsync(() -> service = new OpenAiService(key, Duration.ofSeconds(5)));
     }
 
     public static CompletableFuture<String> getResponse(ConfigurationSection section, StringBuilder cached, String message) {
