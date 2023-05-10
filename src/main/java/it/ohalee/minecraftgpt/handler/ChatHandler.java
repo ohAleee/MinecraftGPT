@@ -5,6 +5,7 @@ import it.ohalee.minecraftgpt.OpenAI;
 import it.ohalee.minecraftgpt.Type;
 import it.ohalee.minecraftgpt.util.Messages;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -59,8 +60,13 @@ public class ChatHandler implements Listener {
     }
 
     private void sendMessage(String message, Collection<Player> players) {
+        Bukkit.getOnlinePlayers().stream()
+                .filter(player -> !players.contains(player) && player.hasPermission("minecraftgpt.receive"))
+                .forEach(player -> player.sendMessage(message));
+
         for (Player player : players)
             player.sendMessage(message);
+
         if (plugin.getConfig().getBoolean("send-messages-to-console", true))
             plugin.getServer().getConsoleSender().sendMessage(message);
     }
