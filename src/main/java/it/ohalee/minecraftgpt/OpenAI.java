@@ -29,21 +29,7 @@ public class OpenAI {
             double topP = section.getDouble("top-p");
             double temperature = section.getDouble("temperature");
 
-            if (model.startsWith("gpt-4") || model.startsWith("gpt-3.5")) {
-                return service.createChatCompletion(ChatCompletionRequest.builder()
-                                .model(model)
-                                .temperature(temperature)
-                                .maxTokens(maxTokens)
-                                .topP(topP)
-                                .frequencyPenalty(frequencyPenalty)
-                                .presencePenalty(presencePenalty)
-                                .stop(Arrays.asList("Human:", "AI:"))
-                                .build())
-                        .getChoices().get(0).getMessage().getContent();
-            }
-
-            return service.createCompletion(CompletionRequest.builder()
-                            .prompt(cached.toString())
+            return service.createChatCompletion(ChatCompletionRequest.builder()
                             .model(model)
                             .temperature(temperature)
                             .maxTokens(maxTokens)
@@ -52,8 +38,7 @@ public class OpenAI {
                             .presencePenalty(presencePenalty)
                             .stop(Arrays.asList("Human:", "AI:"))
                             .build())
-                    .getChoices().get(0).getText();
-
+                    .getChoices().get(0).getMessage().getContent();
         }).exceptionally(throwable -> {
             if (throwable.getCause() instanceof HttpException e) {
                 String reason = switch (e.response().code()) {
