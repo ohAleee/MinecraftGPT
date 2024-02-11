@@ -5,6 +5,8 @@ import it.ohalee.minecraftgpt.Type;
 import it.ohalee.minecraftgpt.util.Messages;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+
 public class TypeManager {
 
     public static void startConversation(Main plugin, Player player, Type type) {
@@ -15,7 +17,7 @@ public class TypeManager {
         }
 
         Main.USER_TYPE.put(player, type);
-        Main.CACHE.put(player, new StringBuilder());
+        Main.CACHE.put(player, new ArrayList<>());
         player.sendMessage(Messages.format(plugin.getConfig().getString("command.toggle.enabled")));
     }
 

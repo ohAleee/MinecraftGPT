@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalCause;
 import com.google.common.cache.RemovalListener;
+import com.theokanning.openai.completion.chat.ChatMessage;
 import it.ohalee.minecraftgpt.command.ChatCommand;
 import it.ohalee.minecraftgpt.handler.ChatHandler;
 import it.ohalee.minecraftgpt.handler.PlayerHandler;
@@ -16,11 +17,12 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Main extends JavaPlugin {
 
-    public static Cache<Player, StringBuilder> CACHE;
+    public static Cache<Player, List<ChatMessage>> CACHE;
     public static Cache<Player, Type> USER_TYPE = CacheBuilder.newBuilder().build();
 
     @Override
@@ -35,7 +37,7 @@ public class Main extends JavaPlugin {
 
         CACHE = CacheBuilder.newBuilder()
                 .expireAfterWrite(30, TimeUnit.MINUTES)
-                .removalListener((RemovalListener<Player, StringBuilder>) notification -> {
+                .removalListener((RemovalListener<Player, List<ChatMessage>>) notification -> {
                     if (notification.getKey() == null) return;
                     USER_TYPE.invalidate(notification.getKey());
                     if (notification.getCause() == RemovalCause.EXPIRED) {

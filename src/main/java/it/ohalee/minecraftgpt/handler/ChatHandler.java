@@ -1,5 +1,6 @@
 package it.ohalee.minecraftgpt.handler;
 
+import com.theokanning.openai.completion.chat.ChatMessage;
 import it.ohalee.minecraftgpt.Main;
 import it.ohalee.minecraftgpt.OpenAI;
 import it.ohalee.minecraftgpt.Type;
@@ -11,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -42,10 +44,10 @@ public class ChatHandler implements Listener {
             sendMessage(format(list.get(0), e.getMessage(), player.getName()), recipients);
         }
 
-        StringBuilder builder = Main.CACHE.getIfPresent(player);
-        if (builder == null) builder = new StringBuilder();
+        List<ChatMessage> messages = Main.CACHE.getIfPresent(player);
+        if (messages == null) messages = new ArrayList<>();
 
-        OpenAI.getResponse(plugin.getConfig().getConfigurationSection("chatgpt"), builder, e.getMessage()).whenComplete((response, throwable) -> {
+        OpenAI.getResponse(plugin.getConfig().getConfigurationSection("chatgpt"), messages, e.getMessage()).whenComplete((response, throwable) -> {
             if (throwable != null) {
                 throwable.printStackTrace();
                 player.sendMessage(Messages.format(plugin.getConfig().getString("command.error")));

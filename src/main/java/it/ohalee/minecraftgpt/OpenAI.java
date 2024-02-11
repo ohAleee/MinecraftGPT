@@ -1,13 +1,14 @@
 package it.ohalee.minecraftgpt;
 
-import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
+import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
 import org.bukkit.configuration.ConfigurationSection;
 import retrofit2.HttpException;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class OpenAI {
@@ -18,8 +19,8 @@ public class OpenAI {
         return CompletableFuture.runAsync(() -> service = new OpenAiService(key, Duration.ofSeconds(5)));
     }
 
-    public static CompletableFuture<String> getResponse(ConfigurationSection section, StringBuilder cached, String message) {
-        cached.append("\nHuman:").append(message).append("\nAI:");
+    public static CompletableFuture<String> getResponse(ConfigurationSection section, List<ChatMessage> chatMessages, String message) {
+        chatMessages.add(new ChatMessage("Human", message));
 
         return CompletableFuture.supplyAsync(() -> {
             String model = section.getString("model", "text-davinci-003");
@@ -29,7 +30,8 @@ public class OpenAI {
             double topP = section.getDouble("top-p");
             double temperature = section.getDouble("temperature");
 
-            return service.createChatCompletion(ChatCompletionRequest.builder()
+            String reply = service.createChatCompletion(ChatCompletionRequest.builder()
+                            .messages(chatMessages)
                             .model(model)
                             .temperature(temperature)
                             .maxTokens(maxTokens)
@@ -39,6 +41,9 @@ public class OpenAI {
                             .stop(Arrays.asList("Human:", "AI:"))
                             .build())
                     .getChoices().get(0).getMessage().getContent();
+
+            chatMessages.add(new ChatMessage("AI", reply));
+            return reply;
         }).exceptionally(throwable -> {
             if (throwable.getCause() instanceof HttpException e) {
                 String reason = switch (e.response().code()) {
