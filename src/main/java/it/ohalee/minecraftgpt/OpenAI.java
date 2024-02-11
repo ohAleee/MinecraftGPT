@@ -20,7 +20,7 @@ public class OpenAI {
     }
 
     public static CompletableFuture<String> getResponse(ConfigurationSection section, List<ChatMessage> chatMessages, String message) {
-        chatMessages.add(new ChatMessage("Human", message));
+        chatMessages.add(new ChatMessage("user", message));
 
         return CompletableFuture.supplyAsync(() -> {
             String model = section.getString("model", "text-davinci-003");
@@ -42,7 +42,7 @@ public class OpenAI {
                             .build())
                     .getChoices().get(0).getMessage().getContent();
 
-            chatMessages.add(new ChatMessage("AI", reply));
+            chatMessages.add(new ChatMessage("assistant", reply));
             return reply;
         }).exceptionally(throwable -> {
             if (throwable.getCause() instanceof HttpException e) {
