@@ -1,8 +1,8 @@
 package it.ohalee.minecraftgpt;
 
-import com.theokanning.openai.completion.chat.ChatCompletionRequest;
-import com.theokanning.openai.completion.chat.ChatMessage;
-import com.theokanning.openai.service.OpenAiService;
+import com.launchableinc.openai.completion.chat.ChatCompletionRequest;
+import com.launchableinc.openai.completion.chat.ChatMessage;
+import com.launchableinc.openai.service.OpenAiService;
 import org.bukkit.configuration.ConfigurationSection;
 import retrofit2.HttpException;
 

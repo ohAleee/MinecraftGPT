@@ -1,6 +1,6 @@
 package it.ohalee.minecraftgpt.handler;
 
-import com.theokanning.openai.completion.chat.ChatMessage;
+import com.launchableinc.openai.completion.chat.ChatMessage;
 import it.ohalee.minecraftgpt.Main;
 import it.ohalee.minecraftgpt.OpenAI;
 import it.ohalee.minecraftgpt.Type;

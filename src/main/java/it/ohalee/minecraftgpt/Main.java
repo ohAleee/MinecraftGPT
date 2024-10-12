@@ -4,7 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalCause;
 import com.google.common.cache.RemovalListener;
-import com.theokanning.openai.completion.chat.ChatMessage;
+import com.launchableinc.openai.completion.chat.ChatMessage;
 import it.ohalee.minecraftgpt.command.ChatCommand;
 import it.ohalee.minecraftgpt.handler.ChatHandler;
 import it.ohalee.minecraftgpt.handler.PlayerHandler;
